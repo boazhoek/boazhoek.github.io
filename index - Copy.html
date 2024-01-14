@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boaz Hoek</title>
+
+    <link rel="stylesheet" src="style.css" type="text/css" />
+
+
+</head>
+
+<body>
+
+    
+
+    <div class="staticleft2">
+
+
+        <a href="contact.html">INFO</a>
+
+    </div>
+
+
+    <div class="containerdiv">
+
+        <div></div>
+
+
+
+        <div class="scrollableright">
+
+            <img src="assets/rood hart 2.png">
+            <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM.</p>
+            <br><br>
+            <img src="assets/rood hart 3.png">
+            <p>LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SORIS NISI ARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM.</p>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+
+<style>
+    a {
+        
+        color: black;
+        
+    }
+     a:hover{
+    text-decoration: none;
+}
+
+    p {
+        margin-top: 0px;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.8rem;
+    }
+
+    .containerdiv {
+        display: grid;
+        grid-template-columns: 1fr 200fr;
+        position: relative;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .staticleft {
+        position: fixed; 
+        max-width: 23%;
+        max-height: 10%;
+        display: block;
+       
+    }
+
+    .staticleft2 {
+        position: fixed; 
+        max-width: 23%;
+        display: block;
+        bottom: 7px;
+        z-index: 2;
+    }
+
+
+    .scrollableright {
+        position: relative;
+    }
+
+    img {
+        width: 100%;
+        object-fit: scale-down;
+        position: relative;
+    }
+
+    @media screen and (max-aspect-ratio: 1/1) {
+
+        body {
+            font-size: 1.4rem;
+            
+            margin: 0;
+        }
+
+        a {
+            font-size: 1.5rem;
+        }
+
+
+        .containerdiv {
+            display: grid;
+            grid-template-columns: 0% 1fr;
+            position: relative;
+            width: 100%;
+        }
+
+        .staticleft {
+            position: fixed;
+            z-index: 2;
+            max-height: 10%;
+            display: block;
+            margin: 10px;
+        }
+
+        .staticleft2 {
+            position: fixed;
+            max-height: 10%;
+            top: 0px;
+            display: block;
+            right: 0px;
+            z-index: 2;
+            margin: 10px;
+        }
+
+
+        .scrollableright {
+            position: relative;
+            left: 0;
+            right: 0;
+            
+        }
+        p{
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 0px;
+        }
+
+
+    }
+</style>
+
+
+</html>
