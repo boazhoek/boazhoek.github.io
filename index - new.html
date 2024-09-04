@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOAZ HOEK</title>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <style>
+        /* Reset some default styles */
+        body, h1, h2, h3, h4, h5, h6, p, ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            text-transform: uppercase; /* Make all text uppercase */
+            color: #00ff00; /* Set text color */
+            font-size: 13px; /* Set default font size */
+        }
+
+        /* Basic styling for the body */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column; /* Ensure content flows vertically */
+            min-height: 100vh;
+            background-color: #0012dd; /* Set the background color */
+            margin: 0; /* Remove default margin */
+        }
+
+        /* Header styling */
+        header {
+            width: 100%; /* Full width of viewport */
+            background-color: #0012dd;
+            color: #00ff00; /* Set text color */
+            padding: 40px 45px; /* Add 20px padding on top, 45px on sides, and 20px on bottom */
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: center; /* Center items vertically */
+            position: fixed;
+            top: 0;
+            z-index: 1; /* Ensure header is on top */
+        }
+
+        /* Logo styling */
+        .logo a {
+            color: #00ff00; /* Set text color */
+            font-weight: bold; /* Make text bold */
+            text-transform: uppercase;
+            text-decoration: none; /* Remove underline */
+            transition: text-decoration 0.3s;
+            margin-right: 20px; /* Space between logo and menu */
+        }
+
+        /* Menu styling */
+        .menu a {
+            color: #00ff00; /* Set text color */
+            text-transform: uppercase;
+            text-decoration: none; /* Remove underline */
+            transition: text-decoration 0.3s;
+        }
+
+        .menu a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        /* Wrapper to center and limit content width */
+        .wrapper {
+            width: 1000px; /* Fixed width of the content area */
+            margin: auto; /* Center align horizontally */
+            padding: 20px; /* Padding inside the wrapper */
+            margin-top: 140px; /* Space on top of the content area to accommodate the header */
+            background-color: #0012dd; /* Match background color */
+        }
+
+        /* Main content styling */
+        main {
+            padding: 20px;
+            background-color: #0012dd; /* Match background color */
+            color: #00ff00; /* Set text color */
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Footer styling */
+        footer {
+            width: 100%; /* Full width of viewport */
+            background-color: #0012dd; /* Match background color */
+            color: #00ff00; /* Set text color */
+            padding-bottom: 5px; /* Add 5px padding at the bottom */
+            text-align: center; /* Center align text */
+        }
+
+        footer a {
+            color: #00ff00; /* Set text color */
+            text-transform: uppercase;
+            text-decoration: underline; /* Always underline */
+            transition: text-decoration 0.3s;
+            margin: 10 10px; /* Add space between links */
+            display: inline-block; /* Make sure links don't break lines */
+        }
+
+        footer a:hover {
+            text-decoration: none; /* Remove underline on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1000px) { /* Adjust as needed */
+            .logo a {
+                font-size: 18px; /* Adjust font size for smaller screens */
+            }
+            .wrapper {
+                width: 100%; /* Adjust width for smaller screens */
+            }
+            header {
+                flex-direction: column; /* Stack logo and menu vertically */
+                align-items: flex-start; /* Align items to the start */
+            }
+            .menu {
+                margin-left: 0; /* Reset margin */
+                margin-top: 10px; /* Add space above menu */
+            }
+            .menu a {
+                margin-left: 0; /* Reset margin */
+                margin-right: 0px; /* Add space between menu items */
+            }
+            footer a {
+                display: inline-block;
+                margin: 5px 2px; /* Adjust spacing for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index - new.html">BOAZ HOEK</a>
+        </div>
+        <div class="menu">
+            <a href="menu.html">MENU</a>
+        </div>
+    </header>
+    <div class="wrapper">
+        <main>
+            <!-- Your main content goes here -->
+            <h1>Main Content Area</h1>
+            <p>This is where your main content will be displayed.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec gravida nisl quis sapien convallis, a fringilla ipsum convallis. Integer rutrum ex eu ante tincidunt, id rutrum quam consectetur. Proin at augue et urna lacinia hendrerit. Duis eget velit libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat.</p>
+        </main>
+    </div>
+    <footer>
+        <div>
+            <li><a href="mailto:boazhoek@gmail.com">CONTACT</a></li> <!-- New Contact option -->
+        </div>
+    </footer>
+</body>
+</html>
