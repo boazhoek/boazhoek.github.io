@@ -3,160 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOAZ HOEK</title>
+    <title>Boaz Hoek</title>
     <!-- Favicon -->
-    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="icon" href="assets/background_images/new-icon-gif-9.gif" type="image/x-icon">
     <style>
-        /* Reset some default styles */
+        /* Reset default styles */
         body, h1, h2, h3, h4, h5, h6, p, ul {
             margin: 0;
             padding: 0;
             list-style: none;
             text-decoration: none;
-            text-transform: uppercase; /* Make all text uppercase */
-            color: #00ff00; /* Set text color */
-            font-size: 13px; /* Set default font size */
-        }
-
-        /* Prevent horizontal scrolling */
-        html, body {
-            overflow-x: hidden; /* Prevent horizontal overflow */
-            width: 100%; /* Ensure full width */
+            text-transform: uppercase;
+            color: #00ff00; /* Original green text color */
+            font-size: 13px;
+            -webkit-text-stroke: 1px transparent; /* Transparent stroke */
+            text-stroke: 1px transparent;
+            font-weight: bold;
+            transition: -webkit-text-stroke 0.3s ease, text-stroke 0.3s ease;
         }
 
         /* Basic styling for the body */
         body {
-            font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column; /* Ensure content flows vertically */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            background-color: #0012dd; /* Set the background color */
-            margin: 0; /* Remove default margin */
+            margin: 0;
+            padding: 20px;
+            background: url('assets/background_images/Mario\ Kart\ Nintendo\ GIF.gif');
+            background-size: cover;
+            background-position: center;
+            position: relative;
         }
 
-        /* Header styling */
-        header {
-            width: 100%; /* Full width of viewport */
-            background-color: rgba(0, 18, 221, 0.5); /* Set the background color with 50% opacity */
-            color: #00ff00; /* Set text color */
-            padding: 20px 25px; /* Add padding on both sides */
-            display: flex;
-            justify-content: space-between; /* Space between logo and menu */
-            align-items: center; /* Center items vertically */
-            position: fixed;
+        /* Apply Gaussian blur to the background */
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
-            z-index: 1; /* Ensure header is on top */
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            z-index: -1; /* Ensure the blur stays behind content */
         }
 
-        /* Logo styling */
-        .logo a {
-            color: #00ff00; /* Set text color */
-            text-transform: uppercase;
-            text-decoration: none; /* Remove underline */
-            transition: text-decoration 0.3s;
+
+        /* Navigation menu styling */
+        nav ul {
+            padding: 0;
+            text-align: center;
         }
 
-        /* Add space between BOAZ HOEK and MENU on PC */
-        .menu {
-            margin-left: auto; /* Push the menu to the right */
-            padding-right: 50px; /* Add padding to ensure menu is fully visible */
+        nav ul li {
+            margin-bottom: 5px;
         }
 
-        /* Menu styling */
-        .menu a {
-            color: #00ff00; /* Set text color */
-            text-transform: uppercase;
-            text-decoration: underline; /* Always underline */
-            transition: text-decoration 0.3s;
+        nav ul li a {
+            color: #76ff7a; /* Original green text color */
+            font-size: 13px;
+            -webkit-text-stroke: 1px transparent; /* Transparent stroke */
+            text-stroke: 1px transparent;
+            text-decoration: none;
+            transition: -webkit-text-stroke 0.3s ease, text-stroke 0.3s ease;
         }
 
-        .menu a:hover {
-            text-decoration: none; /* Remove underline on hover */
-        }
-
-        /* Wrapper to center and limit content width */
-        .wrapper {
-            max-width: 1000px; /* Fixed max-width for the content area */
-            width: 100%; /* Full width for smaller screens */
-            margin: auto; /* Center align horizontally */
-            padding: 20px; /* Padding inside the wrapper */
-            margin-top: 140px; /* Space on top of the content area to accommodate the header */
-            background-color: #0012dd; /* Match background color */
+        nav ul li a:hover {
+            -webkit-text-stroke: 1px #fffdbc;
+            text-stroke: 1px #fffdbc;
         }
 
         /* Main content styling */
         main {
+            margin-top: 20px;
             padding: 20px;
-            background-color: #0012dd; /* Match background color */
-            color: #00ff00; /* Set text color */
-            text-align: left; /* Align text to the left */
+            color: #2819ff; /* Original green text color */
+            font-size: 16px;
+            -webkit-text-stroke: 1px transparent; /* Transparent stroke */
+            text-stroke: 1px transparent;
+            text-align: center;
+            transition: -webkit-text-stroke 0.3s ease, text-stroke 0.3s ease;
         }
 
-        /* Footer styling */
-        footer {
-            width: 100%; /* Full width of viewport */
-            background-color: #0012dd; /* Match background color */
-            color: #00ff00; /* Set text color */
-            padding-bottom: 5px; /* Add 5px padding at the bottom */
-            text-align: center; /* Center align text */
-        }
-
-        footer a {
-            color: #00ff00; /* Set text color */
-            text-transform: uppercase;
-            text-decoration: underline; /* Always underline */
-            transition: text-decoration 0.3s;
-            margin: 10px; /* Add space between links */
-            display: inline-block; /* Make sure links don't break lines */
-        }
-
-        footer a:hover {
-            text-decoration: none; /* Remove underline on hover */
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 1000px) { /* Adjust as needed */
-            .logo a {
-                font-size: 13px; /* Adjust font size for smaller screens */
-            }
-            .wrapper {
-                width: 100%; /* Full width for smaller screens */
-                padding: 10px; /* Adjust padding for smaller screens */
-            }
-            header {
-                padding: 20px 10px; /* Add more padding for mobile */
-                flex-direction: row; /* Keep items in a row */
-                align-items: center; /* Center items vertically */
-            }
-            .menu {
-                margin-left: auto; /* Push menu to the right */
-                padding-right: 20px; /* Ensure menu is not cut off on mobile */
-            }
-            footer a {
-                display: inline-block;
-                margin: 5px 2px; /* Adjust spacing for smaller screens */
-            }
+        main:hover {
+            -webkit-text-stroke: 1px #b3feb3;
+            text-stroke: 1px #b3feb3;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="index.html">BOAZ HOEK</a>
-        </div>
-        <div class="menu">
-            <a href="menu.html">MENU</a>
-        </div>
-    </header>
-    <div class="wrapper">
-        <main>
-            <!-- Your main content goes here -->
-            <h1>skippediepoded 
-    </div>
-    <footer>
-        <div>
-            <li><a href="mailto:boazhoek@gmail.com">CONTACT</a></li> <!-- New Contact option -->
-        </div>
-    </footer>
+
+    <nav>
+        <ul>
+            <li><a>!under contruction!</a></li>
+
+
+        </ul>
+    </nav>
+    <main>
+
+    </main>
 </body>
 </html>
