@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boaz Hoek</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+  }
+}
+</script>
+  </head>
+  <body class="bg-white text-black h-screen overflow-hidden selection:bg-black selection:text-white leading-tight">
+    <div class="min-h-screen p-4 md:p-6 flex flex-col items-start max-w-3xl animate-in fade-in duration-500">
+      <header class="mb-12">
+        <h1 class="text-[clamp(11px,1.5vw,14px)] font-serif mb-6">
+          Boaz Hoek
+        </h1>
+        
+        <p class="font-serif text-[clamp(11px,1.5vw,14px)]">
+          (UPDATE SOON)
+        </p>
+      </header>
+
+      <main class="flex flex-col gap-1 items-start font-serif text-[clamp(11px,1.5vw,14px)]">
+        <a 
+          href="cv.html"
+          class="underline decoration-1 underline-offset-4 text-left hover:opacity-70 transition-opacity"
+        >
+          cv
+        </a>
+        
+        <a 
+          href="mailto:boazhoek@gmail.com" 
+          class="underline decoration-1 underline-offset-4 hover:opacity-70 transition-opacity"
+        >
+          boazhoek@gmail.com
+        </a>
+
+        <span>
+          (portfolio on request)
+        </span>
+      </main>
+
+      <!-- Aesthetic Decoration -->
+      <div class="fixed bottom-4 left-4 font-mono text-[clamp(9px,1vw,12px)] text-gray-400" id="time-display">
+        LAT: --:--
+      </div>
+    </div>
+
+    <!-- Chat Widget Root -->
+    <div id="chat-root"></div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
