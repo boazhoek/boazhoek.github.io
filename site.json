@@ -1,0 +1,29 @@
+{
+  "name": "sdfghfsf",
+  "instagram": "sdgfdhgd",
+  "email": "tset",
+  "phone": "",
+  "cvFile": "test",
+  "bio": "",
+  "contactText": "estset",
+  "exhibitions": [
+    {
+      "year": null,
+      "title": "test",
+      "venue": "test"
+    }
+  ],
+  "education": [
+    {
+      "year": 2026,
+      "title": "BEAR",
+      "institution": "ArtEZ"
+    }
+  ],
+  "press": [],
+  "texts": [],
+  "writing": [],
+  "representation": "",
+  "representationUrl": "sdgf",
+  "location": "sdgf"
+}
