@@ -1,26 +1,12 @@
 [
   {
-    "id": 1774115001054,
+    "id": 1774116046009,
     "image": {
       "type": "file",
-      "name": "1774115001052.jpg"
+      "name": "1774116046009.jpg"
     },
     "title": "test",
-    "description": "",
-    "material": "",
-    "dimensions": "",
-    "series": "",
-    "year": 2026,
-    "draft": false
-  },
-  {
-    "id": 1774114241565,
-    "image": {
-      "type": "file",
-      "name": "1774114241546.jpeg"
-    },
-    "title": "testsetwsts",
-    "description": "",
+    "description": "test",
     "material": "",
     "dimensions": "",
     "series": "",
