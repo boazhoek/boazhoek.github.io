@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1774113619344,
+    "image": {
+      "type": "file",
+      "name": "1774113619339.jpeg"
+    },
+    "title": "test",
+    "description": "testt",
+    "material": "test",
+    "dimensions": "test",
+    "series": "tset",
+    "year": 2026,
+    "draft": false
+  },
+  {
+    "id": 1774028147265,
+    "image": {
+      "type": "file",
+      "name": "1774028147262.jpeg"
+    },
+    "title": "test",
+    "description": "test",
+    "material": "test",
+    "dimensions": "test",
+    "series": "tset",
+    "year": 2026,
+    "draft": false
+  }
+]
