@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boaz Hoek</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #111; background: #fff; font-size: 13px;
+      line-height: 1.3; overflow: hidden; height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: #111; color: #f0f0f0; }
+
+    .app { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
+
+    /* Mobile header */
+    .mobile-header {
+      display: none; flex-shrink: 0;
+      justify-content: space-between; align-items: center;
+      padding: 8px 10px 7px; border-bottom: 1px solid #111;
+      font-size: 14px; background: #fff; z-index: 50;
+    }
+    .mobile-header-right { display: flex; gap: 14px; align-items: center; }
+    .mobile-header-right a, .mobile-header-right button {
+      background: none; border: none; cursor: pointer;
+      font: inherit; font-size: 14px; color: #111;
+    }
+    .mobile-header-right a:hover, .mobile-header-right button:hover { text-decoration: underline; }
+
+    /* Body */
+    .body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Left pane */
+    .left-pane { width: 50%; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #111; }
+
+    .artist-info { display: flex; padding: 10px 12px; border-bottom: 1px solid #111; gap: 12px; }
+    .artist-name { width: 35%; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+    .artist-bio-col { flex: 1; font-size: 13px; color: #888; line-height: 1.5; }
+    .artist-bio-col p + p { margin-top: 6px; }
+    .artist-bio-col a { border-bottom: 1px solid #888; }
+    .artist-bio-col a:hover { color: #111; border-color: #111; }
+
+    .table-header {
+      display: grid; grid-template-columns: 40% 37% 23%;
+      padding: 5px 10px; border-bottom: 1px solid #111;
+      font-weight: 500; font-size: 13px; background: #fff; flex-shrink: 0;
+    }
+    .works-list { flex: 1; overflow-y: auto; }
+    .works-list::-webkit-scrollbar { width: 3px; }
+    .works-list::-webkit-scrollbar-thumb { background: #ccc; }
+
+    .work-row {
+      display: grid; grid-template-columns: 40% 37% 23%;
+      padding: 5px 10px; border-bottom: 1px solid #111;
+      cursor: pointer; font-size: 13px; transition: background .1s; align-items: start;
+    }
+    .work-row:hover { background: rgba(0,0,0,.04); }
+    .work-row.active { background: #111; color: #fff; }
+    .work-row span { padding-right: 8px; }
+
+    /* Right pane */
+    .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 10px 12px; }
+    .right-pane::-webkit-scrollbar { width: 3px; }
+    .right-pane::-webkit-scrollbar-thumb { background: #ccc; }
+
+    .feed-item { margin-bottom: 32px; }
+    .feed-item img { width: 100%; height: auto; display: block; cursor: pointer; transition: opacity .2s; }
+    .feed-item img:hover { opacity: .92; }
+    .feed-item-meta { display: flex; justify-content: space-between; align-items: baseline; margin-top: 7px; font-size: 13px; font-weight: 500; }
+    .feed-item-medium { font-size: 12px; color: #888; margin-top: 3px; }
+
+    .detail-view { display: none; }
+    .detail-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; font-size: 13px; font-weight: 500; }
+    .detail-back { background: none; border: none; cursor: pointer; font: inherit; font-size: 13px; color: #111; text-transform: uppercase; letter-spacing: .03em; }
+    .detail-back:hover { text-decoration: underline; }
+    .detail-main-img { width: 100%; height: auto; display: block; margin-bottom: 20px; }
+    .detail-text { font-size: 13px; line-height: 1.7; color: #333; max-width: 600px; margin-bottom: 24px; white-space: pre-wrap; }
+    .detail-extra-imgs img { width: 100%; height: auto; display: block; margin-bottom: 12px; }
+
+    .loading { padding: 40px 12px; color: #999; font-size: 13px; }
+
+    .empty-hint {
+      padding: 40px 12px; color: #bbb; font-size: 12px; line-height: 1.8;
+    }
+    .empty-hint strong { color: #999; display: block; margin-bottom: 4px; font-size: 13px; }
+
+    /* Mobile */
+    @media (max-width: 767px) {
+      body { overflow: auto; }
+      .app { height: auto; overflow: auto; }
+      .mobile-header { display: flex; }
+      .body { flex-direction: column; }
+      .left-pane { width: 100%; border-right: none; overflow: visible; display: none; }
+      .left-pane.mobile-open { display: flex; }
+      .right-pane { padding: 10px 8px; overflow: visible; }
+      .artist-info { flex-direction: column; }
+      .artist-name { width: 100%; margin-bottom: 6px; }
+      .mobile-info-text { padding: 12px 8px 20px; font-size: 14px; line-height: 1.5; }
+    }
+    @media (min-width: 768px) {
+      .mobile-header { display: none; }
+      .mobile-info-text { display: none !important; }
+      .left-pane { display: flex !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="mobile-header">
+    <div id="mobile-artist-name">Boaz Hoek</div>
+    <div class="mobile-header-right">
+      <a href="https://instagram.com/" class="ig-link">Instagram</a>
+      <button id="mobile-menu-btn" onclick="toggleMobileMenu()">Menu</button>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="left-pane" id="left-pane">
+      <div class="artist-info">
+        <div class="artist-name" id="artist-name-display">Boaz Hoek</div>
+        <div class="artist-bio-col">
+          <p style="color:#111;font-weight:500;margin-bottom:6px">Information</p>
+          <p id="bio-text" style="color:#888"></p>
+          <div id="contact-block" style="margin-top:8px;color:#888"></div>
+        </div>
+      </div>
+      <div class="table-header">
+        <div>Title</div>
+        <div>Series</div>
+        <div>Year</div>
+      </div>
+      <div class="works-list" id="works-list">
+        <div class="loading">Loading…</div>
+      </div>
+    </div>
+
+    <div class="right-pane" id="right-pane">
+      <div class="mobile-info-text" id="mobile-info-text"></div>
+      <div id="works-feed"><div class="loading">Loading…</div></div>
+      <div class="detail-view" id="detail-view">
+        <div class="detail-header">
+          <div id="detail-title"></div>
+          <button class="detail-back" onclick="closeDetail()">← Back</button>
+        </div>
+        <img class="detail-main-img" id="detail-img" src="" alt="">
+        <div class="detail-text" id="detail-desc"></div>
+        <div id="detail-extras"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// UI HELPERS
+// ─────────────────────────────────────────────
+function toggleMobileMenu() {
+  const pane = document.getElementById('left-pane');
+  const btn  = document.getElementById('mobile-menu-btn');
+  const open = pane.classList.toggle('mobile-open');
+  btn.textContent = open ? 'Close' : 'Menu';
+}
+
+function resolveImageSrc(image) {
+  if (!image) return '';
+  if (typeof image === 'string') return image;
+  if (image.type === 'base64') return image.data;
+  if (image.type === 'file')   return 'images/' + image.name;
+  return '';
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openDetail(item) {
+  const src = resolveImageSrc(item.image);
+  document.getElementById('detail-title').textContent = item.title + (item.year ? '  —  ' + item.year : '');
+  document.getElementById('detail-img').src = src;
+  document.getElementById('detail-img').alt = item.title;
+  let desc = '';
+  if (item.description) desc += item.description;
+  if (item.material || item.dimensions)
+    desc += '\n\n' + [item.material, item.dimensions].filter(Boolean).join(' — ');
+  document.getElementById('detail-desc').textContent = desc.trim();
+  document.getElementById('detail-extras').innerHTML = '';
+  document.getElementById('works-feed').style.display  = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+  document.getElementById('right-pane').scrollTop = 0;
+  document.querySelectorAll('.work-row').forEach(r => r.classList.remove('active'));
+  const row = document.querySelector('.work-row[data-id="' + item.id + '"]');
+  if (row) row.classList.add('active');
+  if (window.innerWidth < 768) {
+    document.getElementById('left-pane').classList.remove('mobile-open');
+    document.getElementById('mobile-menu-btn').textContent = 'Menu';
+  }
+}
+
+function closeDetail() {
+  document.getElementById('works-feed').style.display  = 'block';
+  document.getElementById('detail-view').style.display = 'none';
+  document.querySelectorAll('.work-row').forEach(r => r.classList.remove('active'));
+  document.getElementById('right-pane').scrollTop = 0;
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function renderApp(allItems, siteData) {
+  const name = siteData.name || 'Merel Nas';
+  document.title = name;
+  document.getElementById('artist-name-display').textContent = name;
+  document.getElementById('mobile-artist-name').textContent  = name;
+  document.getElementById('bio-text').textContent = siteData.bio || '';
+
+  let contactHtml = '';
+  if (siteData.representation) contactHtml += '<p>' + (siteData.representationUrl
+    ? '<a href="' + escHtml(siteData.representationUrl) + '" target="_blank" rel="noopener noreferrer">' + escHtml(siteData.representation) + '</a>'
+    : escHtml(siteData.representation)) + '</p>';
+  if (siteData.email) contactHtml += '<p><a href="mailto:' + escHtml(siteData.email) + '">' + escHtml(siteData.email) + '</a></p>';
+  if (siteData.location) contactHtml += '<p>' + escHtml(siteData.location) + '</p>';
+  document.getElementById('contact-block').innerHTML = contactHtml;
+
+  if (siteData.instagram)
+    document.querySelectorAll('.ig-link').forEach(el =>
+      el.href = 'https://instagram.com/' + siteData.instagram.replace('@',''));
+
+  const mobileInfo = document.getElementById('mobile-info-text');
+  if (siteData.bio) mobileInfo.innerHTML = '<p><strong>' + escHtml(name) + '</strong> ' + escHtml(siteData.bio) + '</p>';
+
+  const published = allItems
+    .filter(i => !i.draft)
+    .sort((a,b) => (b.year||0)-(a.year||0) || (b.id||0)-(a.id||0));
+
+  if (!published.length) {
+    document.getElementById('works-list').innerHTML =
+      '<div class="empty-hint">nothing to see here</div>';
+    document.getElementById('works-feed').innerHTML =
+      '<div class="empty-hint">nothing to see here</div>';
+    return;
+  }
+
+  // Left list
+  document.getElementById('works-list').innerHTML = published.map(item =>
+    '<div class="work-row" data-id="' + item.id + '" onclick=\'openDetail(' + JSON.stringify(item).replace(/\'/g,"\\'") + ')\'>' +
+    '<span>' + escHtml(item.title) + '</span>' +
+    '<span>' + escHtml(item.series || '') + '</span>' +
+    '<span>' + (item.year || '') + '</span></div>'
+  ).join('');
+
+  // Right feed
+  document.getElementById('works-feed').innerHTML = published.map(item => {
+    const src = resolveImageSrc(item.image);
+    return '<div class="feed-item" id="feed-' + item.id + '">' +
+      '<img src="' + escHtml(src) + '" alt="' + escHtml(item.title) + '" loading="lazy" onclick=\'openDetail(' + JSON.stringify(item).replace(/\'/g,"\\'") + ')\'>' +
+      '<div class="feed-item-meta"><span>' + escHtml(item.title) + '</span><span>' + (item.year||'') + '</span></div>' +
+      (item.material ? '<div class="feed-item-medium">' + escHtml(item.material) + (item.dimensions ? ' — ' + escHtml(item.dimensions) : '') + '</div>' : '') +
+      '</div>';
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// DATA LOADING — fetches published JSON from repo
+// ─────────────────────────────────────────────
+async function loadData() {
+  try {
+    // 1. Fetch site settings (name, bio, years, etc.)
+    var siteRes = await fetch('site.json?_=' + Date.now());
+    if (!siteRes.ok) throw new Error('site.json not found');
+    var site = await siteRes.json();
+
+    var years = site.years || [];
+
+    // 2. Fetch each per-year portfolio file and combine
+    var allItems = [];
+    for (var i = 0; i < years.length; i++) {
+      try {
+        var r = await fetch('data/portfolio-' + years[i] + '.json?_=' + Date.now());
+        if (r.ok) {
+          var yearItems = await r.json();
+          allItems = allItems.concat(yearItems);
+        }
+      } catch(e) { /* year file missing — skip */ }
+    }
+
+    renderApp(allItems, {
+      name:              site.name              || 'Boaz Hoek',
+      bio:               site.bio               || '',
+      instagram:         site.instagram         || '',
+      email:             site.email             || '',
+      representation:    site.representation    || '',
+      representationUrl: site.representationUrl || '',
+      location:          site.location          || ''
+    });
+
+  } catch(e) {
+    // site.json doesn't exist yet — show empty state
+    renderApp([], { name: 'Boaz Hoek' });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+
+</body>
+</html>
