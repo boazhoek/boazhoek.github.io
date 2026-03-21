@@ -1,11 +1,11 @@
 {
-  "name": "sdfghfsf",
-  "instagram": "sdgfdhgd",
-  "email": "tset",
+  "name": "Boaz Hoek",
+  "instagram": "archive",
+  "email": "boazhoek@gmail.com",
   "phone": "",
-  "cvFile": "test",
-  "bio": "",
-  "contactText": "estset",
+  "cvFile": "",
+  "bio": "test",
+  "contactText": "test",
   "exhibitions": [
     {
       "year": null,
@@ -24,6 +24,6 @@
   "texts": [],
   "writing": [],
   "representation": "",
-  "representationUrl": "sdgf",
-  "location": "sdgf"
+  "representationUrl": "",
+  "location": "Arnhem"
 }
