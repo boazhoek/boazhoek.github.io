@@ -1,15 +1,12 @@
 [
   {
-    "id": 1774116046009,
-    "image": {
-      "type": "file",
-      "name": "1774116046009.jpg"
-    },
+    "id": 1774518264906,
+    "image": "images/1774518264904.jpg",
     "title": "test",
-    "description": "test",
-    "material": "",
-    "dimensions": "",
-    "series": "",
+    "description": "sadfghjgfdfs",
+    "material": "sdafghfhdsf",
+    "dimensions": "safdgfhgsdfs",
+    "series": "asdfgfhgj",
     "year": 2026,
     "draft": false
   }
