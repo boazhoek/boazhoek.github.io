@@ -4,15 +4,9 @@
   "email": "boazhoek@gmail.com",
   "phone": "",
   "cvFile": "",
-  "bio": "test",
+  "bio": "",
   "contactText": "test",
-  "exhibitions": [
-    {
-      "year": null,
-      "title": "test",
-      "venue": "test"
-    }
-  ],
+  "exhibitions": [],
   "education": [
     {
       "year": 2026,
