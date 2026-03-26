@@ -10,11 +10,11 @@
     /* ─── Custom cursor ─── */
     @media (pointer: fine) {
       * { cursor: none !important; }
+      .divider-handle { cursor: col-resize !important; }
     }
     #cursor {
       position: fixed; top: 0; left: 0; z-index: 9999;
-      pointer-events: none;
-      width: 0; height: 0;
+      pointer-events: none; width: 0; height: 0;
     }
     #cursor-crosshair {
       position: absolute;
@@ -24,13 +24,12 @@
     }
     #cursor-crosshair::before,
     #cursor-crosshair::after {
-      content: '';
-      position: absolute;
-      background: #111;
+      content: ''; position: absolute; background: #111;
     }
     #cursor-crosshair::before { width: 1px; height: 100%; left: 50%; top: 0; }
     #cursor-crosshair::after  { width: 100%; height: 1px; top: 50%; left: 0; }
-    body.cursor-hover #cursor-crosshair { transform: translate(-50%, -50%) rotate(45deg) scale(1.5); }
+    body.cursor-hover    #cursor-crosshair { transform: translate(-50%, -50%) rotate(45deg) scale(1.5); }
+    body.cursor-resizing #cursor-crosshair { transform: translate(-50%, -50%) rotate(90deg) scale(1.4); }
 
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -41,16 +40,15 @@
     a { color: inherit; text-decoration: none; }
     ::selection { background: #111; color: #f0f0f0; }
 
-    /* ─── Page load fade ─── */
+    /* ─── Page load ─── */
     .app {
       display: flex; flex-direction: column;
       height: 100vh; width: 100vw;
-      opacity: 0;
-      transition: opacity .4s ease;
+      opacity: 0; transition: opacity .4s ease;
     }
     .app.loaded { opacity: 1; }
 
-    /* Mobile header */
+    /* ─── Mobile header ─── */
     .mobile-header {
       display: none; flex-shrink: 0;
       justify-content: space-between; align-items: center;
@@ -59,23 +57,63 @@
     }
     .mobile-header-right { display: flex; gap: 14px; align-items: center; }
     .mobile-header-right a, .mobile-header-right button {
-      background: none; border: none;
-      font: inherit; font-size: 14px; color: #111;
+      background: none; border: none; font: inherit; font-size: 14px; color: #111;
     }
     .mobile-header-right a:hover, .mobile-header-right button:hover { text-decoration: underline; }
 
-    .body { display: flex; flex: 1; overflow: hidden; }
+    .body { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-    /* Left pane */
-    .left-pane { width: 50%; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #111; }
+    /* ─── Left pane ─── */
+    .left-pane {
+      width: 50%; display: flex; flex-direction: column;
+      overflow: hidden; flex-shrink: 0;
+    }
 
-    .artist-info { display: flex; padding: 10px 12px; border-bottom: 1px solid #111; gap: 12px; }
-    .artist-name { width: 35%; font-size: 13px; font-weight: 500; flex-shrink: 0; }
-    .artist-bio-col { flex: 1; font-size: 13px; color: #888; line-height: 1.5; }
-    .artist-bio-col p + p { margin-top: 6px; }
-    .artist-bio-col a { border-bottom: 1px solid #888; }
-    .artist-bio-col a:hover { color: #111; border-color: #111; }
+    /* ─── Artist name row ─── */
+    .artist-name-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 5px 10px; border-bottom: 1px solid #111;
+      flex-shrink: 0;
+    }
+    .artist-name {
+      font-size: 13px; font-weight: 500;
+    }
+    .info-toggle {
+      background: none; border: none; font: inherit;
+      font-size: 11px; color: #888;
+      letter-spacing: .02em;
+      position: relative;
+    }
+    .info-toggle::after {
+      content: '';
+      position: absolute; left: 0; bottom: -1px;
+      width: 0; height: 1px; background: #888;
+      transition: width .2s ease;
+    }
+    .info-toggle:hover { color: #111; }
+    .info-toggle:hover::after { width: 100%; }
 
+    /* ─── Info dropdown ─── */
+    .info-dropdown {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .3s ease, border-color .3s ease;
+      border-bottom: 0px solid #111;
+      flex-shrink: 0;
+    }
+    .info-dropdown.open {
+      max-height: 200px;
+      border-bottom: 1px solid #111;
+    }
+    .info-dropdown-inner {
+      padding: 8px 10px 10px;
+      font-size: 13px; color: #888; line-height: 1.5;
+    }
+    .info-dropdown-inner p + p { margin-top: 5px; }
+    .info-dropdown-inner a { border-bottom: 1px solid #ccc; }
+    .info-dropdown-inner a:hover { color: #111; border-color: #111; }
+
+    /* ─── Table ─── */
     .table-header {
       display: grid; grid-template-columns: 40% 37% 23%;
       padding: 5px 10px; border-bottom: 1px solid #111;
@@ -95,20 +133,38 @@
     .work-row.active { background: #111; color: #fff; }
     .work-row span { padding-right: 8px; }
 
-    /* Right pane */
-    .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 10px 12px; }
+    /* ─── Divider handle ─── */
+    .divider-handle {
+      width: 9px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      margin-left: -1px;
+      cursor: col-resize !important;
+    }
+    .divider-handle::before {
+      content: '';
+      position: absolute;
+      left: 4px; top: 0; bottom: 0;
+      width: 1px;
+      background: #111;
+      transition: background .15s;
+    }
+    .divider-handle:hover::before,
+    .divider-handle.dragging::before { background: #555; }
+
+    /* ─── Right pane ─── */
+    .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 10px 12px; min-width: 0; }
     .right-pane::-webkit-scrollbar { width: 3px; }
     .right-pane::-webkit-scrollbar-thumb { background: #ccc; }
 
-    /* Feed items — scroll-triggered reveal */
+    /* ─── Feed ─── */
     .feed-item {
       margin-bottom: 32px;
-      opacity: 0;
-      transform: translateY(8px);
+      opacity: 0; transform: translateY(8px);
       transition: opacity .4s ease, transform .4s ease;
     }
     .feed-item.visible { opacity: 1; transform: none; }
-
     .feed-item img { width: 100%; height: auto; display: block; transition: opacity .2s; }
     .feed-item img:hover { opacity: .92; }
     .feed-item-meta {
@@ -117,32 +173,22 @@
     }
     .feed-item-medium { font-size: 12px; color: #888; margin-top: 3px; }
 
-    /* Detail view — fade in/out */
-    .detail-view {
-      display: none;
-      opacity: 0;
-      transition: opacity .25s ease;
-    }
+    /* ─── Detail view ─── */
+    .detail-view { display: none; opacity: 0; transition: opacity .25s ease; }
     .detail-view.visible { opacity: 1; }
-
     .detail-header {
       display: flex; justify-content: space-between; align-items: baseline;
       margin-bottom: 14px; font-size: 13px; font-weight: 500;
     }
     .detail-back {
-      background: none; border: none;
-      font: inherit; font-size: 13px; color: #111;
-      text-transform: uppercase; letter-spacing: .03em;
-      position: relative;
+      background: none; border: none; font: inherit; font-size: 13px;
+      color: #111; text-transform: uppercase; letter-spacing: .03em; position: relative;
     }
     .detail-back::after {
-      content: '';
-      position: absolute; left: 0; bottom: -1px;
-      width: 0; height: 1px; background: #111;
-      transition: width .2s ease;
+      content: ''; position: absolute; left: 0; bottom: -1px;
+      width: 0; height: 1px; background: #111; transition: width .2s ease;
     }
     .detail-back:hover::after { width: 100%; }
-
     .detail-main-img { width: 100%; height: auto; display: block; margin-bottom: 20px; }
     .detail-text {
       font-size: 13px; line-height: 1.7; color: #333;
@@ -152,20 +198,20 @@
 
     .loading { padding: 40px 12px; color: #999; font-size: 13px; }
     .empty-hint { padding: 40px 12px; color: #bbb; font-size: 12px; line-height: 1.8; }
-    .empty-hint strong { color: #999; display: block; margin-bottom: 4px; font-size: 13px; }
 
-    /* Mobile */
+    /* ─── Mobile ─── */
     @media (max-width: 767px) {
       #cursor { display: none; }
       body { overflow: auto; }
       .app { height: auto; overflow: auto; }
       .mobile-header { display: flex; }
       .body { flex-direction: column; }
-      .left-pane { width: 100%; border-right: none; overflow: visible; display: none; }
+      .left-pane { width: 100% !important; overflow: visible; display: none; }
       .left-pane.mobile-open { display: flex; }
-      .right-pane { padding: 10px 8px; overflow: visible; }
-      .artist-info { flex-direction: column; }
-      .artist-name { width: 100%; margin-bottom: 6px; }
+      /* Hide artist name inside left pane on mobile — already in mobile header */
+      .artist-name-row { display: none; }
+      .divider-handle { display: none; }
+      .right-pane { padding: 10px 8px; overflow: visible; flex: none; width: 100%; }
       .mobile-info-text { padding: 12px 8px 20px; font-size: 14px; line-height: 1.5; }
     }
     @media (min-width: 768px) {
@@ -177,12 +223,11 @@
 </head>
 <body>
 
-<div id="cursor">
-  <div id="cursor-crosshair"></div>
-</div>
+<div id="cursor"><div id="cursor-crosshair"></div></div>
 
 <div class="app" id="app">
 
+  <!-- Mobile header — name lives here only on mobile -->
   <div class="mobile-header">
     <div id="mobile-artist-name">Boaz Hoek</div>
     <div class="mobile-header-right">
@@ -191,16 +236,25 @@
     </div>
   </div>
 
-  <div class="body">
+  <div class="body" id="body">
+
+    <!-- Left pane -->
     <div class="left-pane" id="left-pane">
-      <div class="artist-info">
+
+      <!-- Name + info toggle (desktop only) -->
+      <div class="artist-name-row">
         <div class="artist-name" id="artist-name-display">Boaz Hoek</div>
-        <div class="artist-bio-col">
-          <p style="color:#111;font-weight:500;margin-bottom:6px">Information</p>
-          <p id="bio-text" style="color:#888"></p>
-          <div id="contact-block" style="margin-top:8px;color:#888"></div>
+        <button class="info-toggle" id="info-toggle-btn" onclick="toggleInfo()">Info</button>
+      </div>
+
+      <!-- Collapsible info dropdown -->
+      <div class="info-dropdown" id="info-dropdown">
+        <div class="info-dropdown-inner">
+          <p id="bio-text"></p>
+          <div id="contact-block"></div>
         </div>
       </div>
+
       <div class="table-header">
         <div>Title</div>
         <div>Series</div>
@@ -211,6 +265,10 @@
       </div>
     </div>
 
+    <!-- Draggable divider -->
+    <div class="divider-handle" id="divider-handle"></div>
+
+    <!-- Right pane -->
     <div class="right-pane" id="right-pane">
       <div class="mobile-info-text" id="mobile-info-text"></div>
       <div id="works-feed"><div class="loading">Loading…</div></div>
@@ -224,6 +282,7 @@
         <div id="detail-extras"></div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -240,6 +299,53 @@
     document.body.classList.toggle('cursor-hover', !!hit);
   });
 })();
+
+// ─── Draggable divider ────────────────────────
+(function() {
+  const handle    = document.getElementById('divider-handle');
+  const leftPane  = document.getElementById('left-pane');
+  const body      = document.getElementById('body');
+  let dragging = false, startX = 0, startW = 0;
+
+  const MIN_PCT = 25; // left pane min %
+  const MAX_PCT = 50; // left pane max %
+
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX = e.clientX;
+    startW = leftPane.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.classList.add('cursor-resizing');
+    document.body.classList.remove('cursor-hover');
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const totalW = body.offsetWidth;
+    const delta  = e.clientX - startX;
+    let newW = startW + delta;
+    const minW = totalW * MIN_PCT / 100;
+    const maxW = totalW * MAX_PCT / 100;
+    newW = Math.max(minW, Math.min(maxW, newW));
+    leftPane.style.width = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.classList.remove('cursor-resizing');
+  });
+})();
+
+// ─── Info dropdown ────────────────────────────
+function toggleInfo() {
+  const dropdown = document.getElementById('info-dropdown');
+  const btn      = document.getElementById('info-toggle-btn');
+  const open = dropdown.classList.toggle('open');
+  btn.textContent = open ? 'Close' : 'Info';
+}
 
 // ─── Mobile menu ─────────────────────────────
 function toggleMobileMenu() {
@@ -276,7 +382,6 @@ function openDetail(item) {
 
   const feed   = document.getElementById('works-feed');
   const detail = document.getElementById('detail-view');
-
   feed.style.transition = 'opacity .2s ease';
   feed.style.opacity = '0';
   setTimeout(() => {
@@ -301,19 +406,17 @@ function openDetail(item) {
 function closeDetail() {
   const feed   = document.getElementById('works-feed');
   const detail = document.getElementById('detail-view');
-
   detail.classList.remove('visible');
   setTimeout(() => {
     detail.style.display = 'none';
-    feed.style.display   = 'block';
-    feed.style.opacity   = '0';
+    feed.style.display = 'block';
+    feed.style.opacity = '0';
     feed.style.transition = 'opacity .25s ease';
     requestAnimationFrame(() => {
       feed.style.opacity = '1';
       setTimeout(() => { feed.style.transition = ''; }, 300);
     });
   }, 220);
-
   document.querySelectorAll('.work-row').forEach(r => r.classList.remove('active'));
   document.getElementById('right-pane').scrollTop = 0;
 }
@@ -326,13 +429,9 @@ function initFeedReveal() {
   }
   const io = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); io.unobserve(entry.target); }
     });
   }, { threshold: 0.06 });
-
   document.querySelectorAll('.feed-item').forEach((el, i) => {
     el.style.transitionDelay = (i * 50) + 'ms';
     io.observe(el);
@@ -360,15 +459,16 @@ function renderApp(allItems, siteData) {
       el.href = 'https://instagram.com/' + siteData.instagram.replace('@',''));
 
   const mobileInfo = document.getElementById('mobile-info-text');
-  if (siteData.bio) mobileInfo.innerHTML = '<p><strong>' + escHtml(name) + '</strong> ' + escHtml(siteData.bio) + '</p>';
+  if (siteData.bio)
+    mobileInfo.innerHTML = '<p><strong>' + escHtml(name) + '</strong> ' + escHtml(siteData.bio) + '</p>';
 
   const published = allItems
     .filter(i => !i.draft)
     .sort((a,b) => (b.year||0)-(a.year||0) || (b.id||0)-(a.id||0));
 
   if (!published.length) {
-    document.getElementById('works-list').innerHTML = '<div class="empty-hint">nothing to see here</div>';
-    document.getElementById('works-feed').innerHTML = '<div class="empty-hint">nothing to see here</div>';
+    document.getElementById('works-list').innerHTML = '<div class="loading">No works yet.</div>';
+    document.getElementById('works-feed').innerHTML = '<div class="loading">No works yet.</div>';
     return;
   }
 
@@ -408,10 +508,7 @@ async function loadData() {
     for (var i = 0; i < yearsToTry.length; i++) {
       try {
         var r = await fetch('data/portfolio-' + yearsToTry[i] + '.json?_=' + Date.now());
-        if (r.ok) {
-          var yearItems = await r.json();
-          allItems = allItems.concat(yearItems);
-        }
+        if (r.ok) { var yearItems = await r.json(); allItems = allItems.concat(yearItems); }
       } catch(e) {}
     }
 
