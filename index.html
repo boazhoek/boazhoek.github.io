@@ -93,7 +93,24 @@
     .work-row.active { background: rgba(0,0,0,.04); }
 
     /* ─── Divider ─── */
-    .divider-handle { width: 1px; background: #111; z-index: 10; cursor: col-resize !important; }
+    .divider-handle {
+      width: 20px;
+      background: transparent;
+      z-index: 10;
+      cursor: col-resize !important;
+      position: relative;
+    }
+    .divider-handle::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 100%;
+      background: #111;
+      pointer-events: none;
+    }
 
     /* ─── Right pane (White) ─── */
     .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 8px 6px 4px; }
@@ -313,8 +330,8 @@ function toggleMobileMenu() { document.getElementById('left-pane').classList.tog
   
   const h = document.getElementById('divider-handle'), l = document.getElementById('left-pane'), b = document.getElementById('body');
   let drag = false, startX = 0, startW = 0;
-  const MIN_PCT = 50; // Lock at 50% (middle)
-  const MAX_PCT = 50; // Lock at 50% (middle)
+  const MIN_PCT = 20; // Minimum left pane width
+  const MAX_PCT = 80; // Maximum left pane width
   
   h.addEventListener('mousedown', (e) => {
     drag = true;
