@@ -80,18 +80,10 @@
     }
     .info-toggle {
       background: none; border: none; font: inherit;
-      font-size: 11px; color: #888;
-      letter-spacing: .02em;
-      position: relative;
+      font-size: 13px; font-weight: 500; color: #111;
+      letter-spacing: 0;
     }
-    .info-toggle::after {
-      content: '';
-      position: absolute; left: 0; bottom: -1px;
-      width: 0; height: 1px; background: #888;
-      transition: width .2s ease;
-    }
-    .info-toggle:hover { color: #111; }
-    .info-toggle:hover::after { width: 100%; }
+    .info-toggle:hover { opacity: .5; }
 
     /* ─── Info dropdown ─── */
     .info-dropdown {
