@@ -245,7 +245,6 @@
 
 <div class="app" id="app">
 
-  <!-- Mobile header — name lives here only on mobile -->
   <div class="mobile-header">
     <div id="mobile-artist-name">Boaz Hoek</div>
     <div class="mobile-header-right">
@@ -256,16 +255,13 @@
 
   <div class="body" id="body">
 
-    <!-- Left pane -->
     <div class="left-pane" id="left-pane">
 
-      <!-- Name + info toggle (desktop only) -->
       <div class="artist-name-row">
         <div class="artist-name" id="artist-name-display">Boaz Hoek</div>
         <button class="info-toggle" id="info-toggle-btn" onclick="toggleInfo()">Info</button>
       </div>
 
-      <!-- Collapsible info dropdown -->
       <div class="info-dropdown" id="info-dropdown">
         <div class="info-dropdown-inner">
           <p id="bio-text"></p>
@@ -283,10 +279,8 @@
       </div>
     </div>
 
-    <!-- Draggable divider -->
     <div class="divider-handle" id="divider-handle"></div>
 
-    <!-- Right pane -->
     <div class="right-pane" id="right-pane">
       <div class="mobile-info-text" id="mobile-info-text"></div>
       <div id="works-feed"><div class="loading">Loading…</div></div>
@@ -305,6 +299,8 @@
 </div>
 
 <script>
+let lastFeedScrollPos = 0; // Remembers scroll position in feed
+
 // ─── Cursor ──────────────────────────────────
 (function() {
   const el = document.getElementById('cursor');
@@ -386,15 +382,13 @@ function escHtml(s) {
 }
 
 // ─── Detail open/close ───────────────────────
-function openDetail(item) {
+function openDetail(item, clickedImg) {
   const src = resolveImageSrc(item.image);
   document.getElementById('detail-title').textContent = item.title + (item.year ? '  —  ' + item.year : '');
 
   const img = document.getElementById('detail-img');
-  img.classList.add('loading-img');
   img.src = src;
   img.alt = item.title;
-  img.onload = () => { img.classList.remove('loading-img'); };
 
   let desc = '';
   if (item.description) desc += item.description;
@@ -403,23 +397,11 @@ function openDetail(item) {
   document.getElementById('detail-desc').textContent = desc.trim();
   document.getElementById('detail-extras').innerHTML = '';
 
-  const feed   = document.getElementById('works-feed');
+  const feed = document.getElementById('works-feed');
   const detail = document.getElementById('detail-view');
-  feed.style.transition = 'opacity .22s ease, transform .22s ease';
-  feed.style.opacity = '0';
-  feed.style.transform = 'translateX(-8px)';
-  setTimeout(() => {
-    feed.style.display = 'none';
-    feed.style.opacity = '';
-    feed.style.transform = '';
-    feed.style.transition = '';
-    detail.style.display = 'block';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => detail.classList.add('visible'));
-    });
-  }, 220);
+  const rightPane = document.getElementById('right-pane');
 
-  document.getElementById('right-pane').scrollTop = 0;
+  // Highlight active row in left pane
   document.querySelectorAll('.work-row').forEach(r => r.classList.remove('active'));
   const row = document.querySelector('.work-row[data-id="' + item.id + '"]');
   if (row) row.classList.add('active');
@@ -428,28 +410,100 @@ function openDetail(item) {
     document.getElementById('left-pane').classList.remove('mobile-open');
     document.getElementById('mobile-menu-btn').textContent = 'Menu';
   }
+
+  // Save scroll position before switching views
+  lastFeedScrollPos = rightPane.scrollTop;
+
+  // --- SEAMLESS IMAGE TRANSITION LOGIC ---
+  if (clickedImg && clickedImg.tagName === 'IMG') {
+    // 1. Get starting coordinates of the clicked feed image
+    const startRect = clickedImg.getBoundingClientRect();
+
+    // 2. Create a temporary clone to animate
+    const clone = clickedImg.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.top = startRect.top + 'px';
+    clone.style.left = startRect.left + 'px';
+    clone.style.width = startRect.width + 'px';
+    clone.style.height = startRect.height + 'px';
+    clone.style.zIndex = '9999';
+    clone.style.margin = '0';
+    clone.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    clone.style.objectFit = 'cover';
+    document.body.appendChild(clone);
+
+    // Hide original image temporarily
+    clickedImg.style.visibility = 'hidden';
+
+    // 3. Prep the DOM instantly to get target coordinates
+    feed.style.display = 'none';
+    detail.style.display = 'block';
+    img.style.visibility = 'hidden'; // Hide actual detail image while clone moves
+    rightPane.scrollTop = 0; // Reset scroll for detail view
+
+    // Get target coordinates from the newly visible detail image
+    const targetRect = img.getBoundingClientRect();
+
+    // 4. Trigger the clone animation to fly to the target
+    requestAnimationFrame(() => {
+      clone.style.top = targetRect.top + 'px';
+      clone.style.left = targetRect.left + 'px';
+      clone.style.width = targetRect.width + 'px';
+      clone.style.height = targetRect.height + 'px';
+      detail.classList.add('visible'); // Fades in the text/header
+    });
+
+    // 5. Cleanup after animation finishes
+    setTimeout(() => {
+      img.style.visibility = 'visible';
+      clickedImg.style.visibility = 'visible';
+      clone.remove();
+    }, 400);
+
+  } else {
+    // Fallback logic for Left Pane clicks (simple crossfade)
+    feed.style.opacity = '0';
+    setTimeout(() => {
+      feed.style.display = 'none';
+      feed.style.opacity = '1';
+      detail.style.display = 'block';
+      rightPane.scrollTop = 0;
+      requestAnimationFrame(() => detail.classList.add('visible'));
+    }, 220);
+  }
 }
 
 function closeDetail() {
-  const feed   = document.getElementById('works-feed');
+  const feed = document.getElementById('works-feed');
   const detail = document.getElementById('detail-view');
+  const rightPane = document.getElementById('right-pane');
+  
   detail.classList.remove('visible');
+  
   setTimeout(() => {
     detail.style.display = 'none';
     feed.style.display = 'block';
+    
+    // Restore the user's scroll position in the feed
+    rightPane.scrollTop = lastFeedScrollPos;
+    
     feed.style.opacity = '0';
-    feed.style.transform = 'translateX(-10px)';
+    feed.style.transform = 'translateY(10px)';
     feed.style.transition = 'opacity .3s cubic-bezier(.4,0,.2,1), transform .3s cubic-bezier(.4,0,.2,1)';
+    
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         feed.style.opacity = '1';
         feed.style.transform = 'none';
-        setTimeout(() => { feed.style.transition = ''; feed.style.transform = ''; }, 320);
+        setTimeout(() => { 
+          feed.style.transition = ''; 
+          feed.style.transform = ''; 
+        }, 320);
       });
     });
   }, 250);
+  
   document.querySelectorAll('.work-row').forEach(r => r.classList.remove('active'));
-  document.getElementById('right-pane').scrollTop = 0;
 }
 
 // ─── Feed scroll reveal ───────────────────────
@@ -512,8 +566,9 @@ function renderApp(allItems, siteData) {
 
   document.getElementById('works-feed').innerHTML = published.map(item => {
     const src = resolveImageSrc(item.image);
+    // NOTE: Added "this" to the openDetail call here so we can grab the clicked image
     return '<div class="feed-item" id="feed-' + item.id + '">' +
-      '<img src="' + escHtml(src) + '" alt="' + escHtml(item.title) + '" loading="lazy" onclick=\'openDetail(' + JSON.stringify(item).replace(/\'/g,"\\'") + ')\'>' +
+      '<img src="' + escHtml(src) + '" alt="' + escHtml(item.title) + '" loading="lazy" onclick=\'openDetail(' + JSON.stringify(item).replace(/\'/g,"\\'") + ', this)\'>' +
       '<div class="feed-item-meta"><span>' + escHtml(item.title) + '</span><span>' + (item.year||'') + '</span></div>' +
       (item.material ? '<div class="feed-item-medium">' + escHtml(item.material) + (item.dimensions ? ' — ' + escHtml(item.dimensions) : '') + '</div>' : '') +
       '</div>';
