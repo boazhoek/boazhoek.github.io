@@ -1,15 +1,3 @@
-The reduction in line count happened because I simplified the code to fulfill your request to **"remove all white fade-ins"** and **"make the transition faster."** 
-
-In the original version (like the `index(5).html` you provided), a significant portion of the code was dedicated to:
-1.  **Scroll Reveal Logic:** The `IntersectionObserver` and the `initFeedReveal` function, which made items fade in as you scrolled, required both JavaScript and extra CSS classes.
-2.  **Elaborate Transition CSS:** There were many lines of CSS handling `opacity: 0`, `translateY`, and long `cubic-bezier` timings to create "soft" entries.
-3.  **Metadata Safety:** Some of the extra "checks" for missing data were condensed into shorter functions.
-
-I also accidentally switched to a "Dummy" data loader in the last turn to show the visuals, which is why your artwork disappeared.
-
-Below is the **full, robust version**. It restores the **complete data-loading engine** (so all your artworks return), includes the **grey sidebar**, fixes the **detour**, and runs at a **high speed** with **zero fades**.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -216,7 +204,7 @@ function openDetail(item, clickedImg) {
       height: rect.height + 'px',
       margin: '0',
       zIndex: '1000',
-      transition: 'all 0.2s cubic-bezier(0.2, 0, 0.2, 1)', // Snappy and straight
+      transition: 'all 0.2s cubic-bezier(0.2, 0, 0.2, 1)',
       pointerEvents: 'none'
     });
     document.body.appendChild(clone);
@@ -308,21 +296,46 @@ async function loadData() {
 function toggleInfo() { document.getElementById('info-dropdown').classList.toggle('open'); }
 function toggleMobileMenu() { document.getElementById('left-pane').classList.toggle('mobile-open'); }
 
-// Cursor & Divider
+// Cursor & Divider with Limits
 (function() {
   const c = document.getElementById('cursor');
   document.addEventListener('mousemove', e => { c.style.left = e.clientX+'px'; c.style.top = e.clientY+'px'; });
   document.addEventListener('mouseover', e => document.body.classList.toggle('cursor-hover', !!e.target.closest('button, .work-row, img, a')));
   
-  const h = document.getElementById('divider-handle'), l = document.getElementById('left-pane');
-  let drag = false;
-  h.addEventListener('mousedown', () => drag = true);
-  document.addEventListener('mousemove', e => { if(drag) l.style.width = e.clientX + 'px'; });
-  document.addEventListener('mouseup', () => drag = false);
+  const h = document.getElementById('divider-handle'), l = document.getElementById('left-pane'), b = document.getElementById('body');
+  let drag = false, startX = 0, startW = 0;
+  const MIN_PCT = 25; // Minimum 25% width for left pane
+  const MAX_PCT = 75; // Maximum 75% width for left pane
+  
+  h.addEventListener('mousedown', (e) => {
+    drag = true;
+    startX = e.clientX;
+    startW = l.offsetWidth;
+    h.classList.add('dragging');
+    document.body.classList.add('cursor-resizing');
+    document.body.classList.remove('cursor-hover');
+  });
+  
+  document.addEventListener('mousemove', e => {
+    if (!drag) return;
+    const totalW = b.offsetWidth;
+    const delta = e.clientX - startX;
+    let newW = startW + delta;
+    const minW = totalW * MIN_PCT / 100;
+    const maxW = totalW * MAX_PCT / 100;
+    newW = Math.max(minW, Math.min(maxW, newW));
+    l.style.width = newW + 'px';
+  });
+  
+  document.addEventListener('mouseup', () => {
+    if (!drag) return;
+    drag = false;
+    h.classList.remove('dragging');
+    document.body.classList.remove('cursor-resizing');
+  });
 })();
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>
 </body>
 </html>
-```
