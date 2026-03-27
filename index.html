@@ -65,7 +65,9 @@
       padding: 5px 10px; border-bottom: 1px solid #111;
       flex-shrink: 0; background: #f4f4f4;
     }
-    .info-toggle { background: none; border: none; font: inherit; font-weight: 500; color: #111; }
+    .info-toggle { background: none; border: none; font: inherit; font-weight: 500; color: #111; text-decoration: none; transition: text-decoration .15s; }
+    .info-toggle:hover { text-decoration: underline; }
+    .info-toggle.active { text-decoration: underline; }
 
     .info-dropdown {
       overflow: hidden; max-height: 0; flex-shrink: 0;
@@ -80,11 +82,13 @@
       padding: 7px 10px 6px; border-bottom: 1px solid #111;
       font-weight: 500; background: #f4f4f4; flex-shrink: 0;
     }
+    .table-header > div:last-child { text-align: right; }
     .works-list { flex: 1; overflow-y: auto; }
     .work-row {
       display: grid; grid-template-columns: 40% 37% 23%;
       padding: 6px 10px 5px; border-bottom: 1px solid #111;
     }
+    .work-row > span:last-child { text-align: right; }
     .work-row:hover { background: rgba(0,0,0,.04); }
     .work-row.active { background: #111; color: #fff; }
 
@@ -92,7 +96,7 @@
     .divider-handle { width: 1px; background: #111; z-index: 10; cursor: col-resize !important; }
 
     /* ─── Right pane (White) ─── */
-    .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 18px 16px 10px; }
+    .right-pane { flex: 1; overflow-y: auto; background: #fff; padding: 12px 10px 8px; }
 
     /* ─── Feed ─── */
     .feed-item { margin-bottom: 40px; }
@@ -293,7 +297,12 @@ async function loadData() {
   } catch(e) { console.error("Data load failed", e); }
 }
 
-function toggleInfo() { document.getElementById('info-dropdown').classList.toggle('open'); }
+function toggleInfo() {
+  const dropdown = document.getElementById('info-dropdown');
+  const btn = document.getElementById('info-toggle-btn');
+  dropdown.classList.toggle('open');
+  btn.classList.toggle('active');
+}
 function toggleMobileMenu() { document.getElementById('left-pane').classList.toggle('mobile-open'); }
 
 // Cursor & Divider with Limits
@@ -304,8 +313,8 @@ function toggleMobileMenu() { document.getElementById('left-pane').classList.tog
   
   const h = document.getElementById('divider-handle'), l = document.getElementById('left-pane'), b = document.getElementById('body');
   let drag = false, startX = 0, startW = 0;
-  const MIN_PCT = 25; // Minimum 25% width for left pane
-  const MAX_PCT = 75; // Maximum 75% width for left pane
+  const MIN_PCT = 50; // Lock at 50% (middle)
+  const MAX_PCT = 50; // Lock at 50% (middle)
   
   h.addEventListener('mousedown', (e) => {
     drag = true;
