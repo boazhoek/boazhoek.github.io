@@ -134,11 +134,30 @@
     /* ─── Mobile ─── */
     @media (max-width: 767px) {
       #cursor { display: none; }
+      body { font-size: 14px; }
       .mobile-header { display: flex; }
       .left-pane { width: 100% !important; display: none; border-right: none; }
       .left-pane.mobile-open { display: flex; }
       .divider-handle { display: none; }
       .right-pane { width: 100%; padding: 10px; }
+      .mobile-header,
+      .works-feed,
+      .work-row,
+      .feed-item-meta,
+      .detail-back,
+      .info-dropdown-inner {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .detail-back {
+        font-weight: 500;
+      }
+      .feed-item img,
+      .detail-main-img {
+        width: calc(100% + 20px);
+        margin-left: -10px;
+        margin-right: -10px;
+      }
     }
   </style>
 </head>
